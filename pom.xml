@@ -9,8 +9,10 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>../TravelGood</module>
-        <module>../Itinerary</module>
+        <module>TravelGood</module>
+        <module>Itinerary</module>
+        <module>LameDuck</module>
+        <module>NiceView</module>
     </modules>
 
 
