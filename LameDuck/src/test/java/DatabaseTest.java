@@ -1,13 +1,14 @@
+import database.Database;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import src.Database;
-import ws.lameduck.LameduckServiceStub;
+
+import ws.lameduck.*;
+
 
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by liyiran on 2016/11/19.

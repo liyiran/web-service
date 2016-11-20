@@ -24,7 +24,6 @@
         <module>Itinerary</module>
         <module>LameDuck</module>
         <module>NiceView</module>
-        <module>data_structure</module>
     </modules>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/io.dropwizard/dropwizard-core -->

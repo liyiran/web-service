@@ -45,7 +45,7 @@
                     <xsd:sequence>
                         <xsd:element name="fromLocation" type="xsd:string"></xsd:element>
                         <xsd:element name="toLocation" type="xsd:string"></xsd:element>
-                        <xsd:element name="dateOfDeparture" type="xsd:date"></xsd:element>
+                        <xsd:element name="dateOfDeparture" type="xsd:dateTime"></xsd:element>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

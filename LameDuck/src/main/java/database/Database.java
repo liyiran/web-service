@@ -1,43 +1,38 @@
-package src;
+package database;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.time.DateUtils;
+import ws.lameduck.LameduckServiceStub;
 
+
+import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.List;
-
-import ws.lameduck.LameduckServiceStub;
-import ws.lameduck.LameduckServiceStub.*;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by zhenghuayu on 2016/11/19.
  */
 public class Database {
-    private final Airport airportCPH;
-    private final Airport airportCDG;
-    private final Address addressCPH;
-    private final Address addressCDG;
-    private final Flight flightSASDK303;
+    private final LameduckServiceStub.Airport airportCPH;
+    private final LameduckServiceStub.Airport airportCDG;
+    private final LameduckServiceStub.Address addressCPH;
+    private final LameduckServiceStub.Address addressCDG;
+    private final LameduckServiceStub.Flight flightSASDK303;
 
-    private ArrayList<Flight> flightList;
+    private ArrayList<LameduckServiceStub.Flight> flightList;
 
     public Database() throws ParseException {
          /*
         new Airport
         */
 
-        airportCPH = new Airport();
+        airportCPH = new LameduckServiceStub.Airport();
         airportCPH.setName("CPH LUFTHAVN");
 
-        addressCPH = new Address();
+        addressCPH = new LameduckServiceStub.Address();
         addressCPH.setCity("Copenhagen");
         addressCPH.setCountry("Denmark");
         addressCPH.setState("Greater Copenhagen");
@@ -50,10 +45,10 @@ public class Database {
         new Airport
         */
 
-        airportCDG = new Airport();
+        airportCDG = new LameduckServiceStub.Airport();
         airportCDG.setName("Paris charle de gualle");
 
-        addressCDG = new Address();
+        addressCDG = new LameduckServiceStub.Address();
         addressCDG.setCity("Paris");
         addressCDG.setCountry("France");
         addressCDG.setState("Paris");
@@ -68,7 +63,7 @@ public class Database {
 
        */
 
-        flightSASDK303 = new Flight();
+        flightSASDK303 = new LameduckServiceStub.Flight();
         flightSASDK303.setAirline("SAS");
         flightSASDK303.setDepartingFrom(airportCPH);
         flightSASDK303.setArrivingAt(airportCDG);
@@ -86,16 +81,16 @@ public class Database {
       create flights hashmap
        */
 
-        flightList = new ArrayList<Flight>();
+        flightList = new ArrayList<LameduckServiceStub.Flight>();
         flightList.add(flightSASDK303);
     }
-    public Collection<Flight> getFlight(final String departureAirportName, final String arrivalAirportName, final Calendar departureDateTime){
+    public Collection<LameduckServiceStub.Flight> getFlight(final String departureAirportName, final String arrivalAirportName, final Calendar departureDateTime){
 
-        return Collections2.filter(flightList, new Predicate<Flight>() {
-            public boolean apply(@Nullable Flight flight) {
+        return Collections2.filter(flightList, new Predicate<LameduckServiceStub.Flight>() {
+            public boolean apply(@Nullable LameduckServiceStub.Flight flight) {
                 return flight.getDepartingFrom().getName().equals(departureAirportName)
                         && flight.getArrivingAt().getName().equals(arrivalAirportName)
-                        && flight.getDepartureDateTime().equals(departureDateTime);
+                        && flight.getDepartureDateTime().getTimeInMillis() == departureDateTime.getTimeInMillis();
             }
         });
     }

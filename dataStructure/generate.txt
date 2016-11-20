@@ -1,1 +1,0 @@
-sh /Users/liyiran/IdeaProjects/webService/data_structure/axis2-1.7.4/bin/wsdl2java.sh -uri /Users/liyiran/IdeaProjects/webService/data_structure/src/main/resources/lameduck.wsdl -o /Users/liyiran/IdeaProjects/webService/data_structure/src/main/java
