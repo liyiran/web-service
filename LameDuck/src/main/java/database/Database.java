@@ -1,38 +1,50 @@
 package database;
 
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import dk.dtu.imm.fastmoney.types.AccountType;
 import org.apache.commons.lang3.time.DateUtils;
-import ws.lameduck.LameduckServiceStub;
-
+import ws.lameduck.Address;
+import ws.lameduck.Airport;
+import ws.lameduck.Flight;
+import ws.lameduck.FlightInformation;
 
 import javax.annotation.Nullable;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by zhenghuayu on 2016/11/19.
  */
 public class Database {
-    private final LameduckServiceStub.Airport airportCPH;
-    private final LameduckServiceStub.Airport airportCDG;
-    private final LameduckServiceStub.Address addressCPH;
-    private final LameduckServiceStub.Address addressCDG;
-    private final LameduckServiceStub.Flight flightSASDK303;
+    private final Airport airportCPH;
+    private final Airport airportCDG;
+    private final Address addressCPH;
+    private final Address addressCDG;
+    private final Flight flightSASDK303;
 
-    private ArrayList<LameduckServiceStub.Flight> flightList;
+    private ArrayList<Flight> flightList;
 
-    public Database() throws ParseException {
+    private Map<String, AccountType> paidReservation = new ConcurrentHashMap<String, AccountType>();
+
+    public Database() throws ParseException, DatatypeConfigurationException {
          /*
         new Airport
         */
 
-        airportCPH = new LameduckServiceStub.Airport();
+        airportCPH = new Airport();
         airportCPH.setName("CPH LUFTHAVN");
 
-        addressCPH = new LameduckServiceStub.Address();
+        addressCPH = new Address();
         addressCPH.setCity("Copenhagen");
         addressCPH.setCountry("Denmark");
         addressCPH.setState("Greater Copenhagen");
@@ -45,10 +57,10 @@ public class Database {
         new Airport
         */
 
-        airportCDG = new LameduckServiceStub.Airport();
+        airportCDG = new Airport();
         airportCDG.setName("Paris charle de gualle");
 
-        addressCDG = new LameduckServiceStub.Address();
+        addressCDG = new Address();
         addressCDG.setCity("Paris");
         addressCDG.setCountry("France");
         addressCDG.setState("Paris");
@@ -63,35 +75,61 @@ public class Database {
 
        */
 
-        flightSASDK303 = new LameduckServiceStub.Flight();
+        flightSASDK303 = new Flight();
         flightSASDK303.setAirline("SAS");
         flightSASDK303.setDepartingFrom(airportCPH);
         flightSASDK303.setArrivingAt(airportCDG);
         flightSASDK303.setFlightNumber("DK303");
         flightSASDK303.setNoOfPassengers(150);
         flightSASDK303.setNoOfRegisteredPassengers(0);
-        Calendar departureDateTime = Calendar.getInstance();
+        GregorianCalendar departureDateTime = new GregorianCalendar();
         departureDateTime.setTime(DateUtils.parseDate("2016-11-12 16:00", "yyyy-MM-dd hh:mm"));
-        flightSASDK303.setDepartureDateTime(departureDateTime);
-        Calendar arrivalDateTime = Calendar.getInstance();
+        departureDateTime.setTimeZone(java.util.TimeZone.getDefault());
+        flightSASDK303.setDepartureDateTime(DatatypeFactory.newInstance().newXMLGregorianCalendar(departureDateTime));
+        GregorianCalendar arrivalDateTime = new GregorianCalendar();
         arrivalDateTime.setTime(DateUtils.parseDate("2016-11-12 17:30", "yyyy-MM-dd hh:mm"));
-        flightSASDK303.setArrivalDateTime(arrivalDateTime);
+        arrivalDateTime.setTimeZone(java.util.TimeZone.getDefault());
+        flightSASDK303.setArrivalDateTime(DatatypeFactory.newInstance().newXMLGregorianCalendar(arrivalDateTime));
 
        /*
       create flights hashmap
        */
 
-        flightList = new ArrayList<LameduckServiceStub.Flight>();
+        flightList = new ArrayList<Flight>();
         flightList.add(flightSASDK303);
     }
-    public Collection<LameduckServiceStub.Flight> getFlight(final String departureAirportName, final String arrivalAirportName, final Calendar departureDateTime){
 
-        return Collections2.filter(flightList, new Predicate<LameduckServiceStub.Flight>() {
-            public boolean apply(@Nullable LameduckServiceStub.Flight flight) {
-                return flight.getDepartingFrom().getName().equals(departureAirportName)
-                        && flight.getArrivingAt().getName().equals(arrivalAirportName)
-                        && flight.getDepartureDateTime().getTimeInMillis() == departureDateTime.getTimeInMillis();
+    public Collection<Flight> getFlight(final String departureAirportName, final String arrivalAirportName, final GregorianCalendar departureDateTime) {
+
+        return Collections2.filter(flightList, new Predicate<Flight>() {
+            public boolean apply(@Nullable Flight flight) {
+                try {
+                    XMLGregorianCalendar departureXMLDateTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(departureDateTime);
+                    return flight.getDepartingFrom().getName().equals(departureAirportName)
+                            && flight.getArrivingAt().getName().equals(arrivalAirportName)
+                            && flight.getDepartureDateTime().equals(departureXMLDateTime);
+                } catch (DatatypeConfigurationException e) {
+                    Logger.getLogger(Database.class.getName()).warning(e.getMessage());
+                }
+                return false;
             }
         });
+    }
+
+    public FlightInformation getFlightInformation() {
+        FlightInformation flightInformation = new FlightInformation();
+        flightInformation.setAirlineReservationServiceName(flightSASDK303.getAirline());
+        flightInformation.setBookingNo("000001");
+        flightInformation.setFlight(flightSASDK303);
+        flightInformation.setPrice(100.00);
+        return flightInformation;
+    }
+
+    public void addPaidReservation(String bookingNumber, AccountType accountType) {
+        paidReservation.put(bookingNumber, accountType);
+    }
+
+    public AccountType getPaidReseration(String bookingNumber){
+        return paidReservation.get(bookingNumber);
     }
 }

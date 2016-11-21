@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="lameduckService-test-client">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/dataStructure/target/generated-sources/build/lib/lameduckService-test-client.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

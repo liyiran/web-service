@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="XBeans-packaged">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/dataStructure/target/generated-sources/build/lib/XBeans-packaged.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
