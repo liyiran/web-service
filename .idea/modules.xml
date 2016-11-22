@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Itinerary/Itinerary.iml" filepath="$PROJECT_DIR$/Itinerary/Itinerary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LameDuck/LameDuck.iml" filepath="$PROJECT_DIR$/LameDuck/LameDuck.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NiceView/NiceView.iml" filepath="$PROJECT_DIR$/NiceView/NiceView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TravelGood/TravelGood.iml" filepath="$PROJECT_DIR$/TravelGood/TravelGood.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web_service.iml" filepath="$PROJECT_DIR$/web_service.iml" />
+    </modules>
+  </component>
+</project>
